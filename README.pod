@@ -6,25 +6,16 @@ Mojolicious::Plugin::PlackMiddleware - Plack::Middleware inside Mojolicious
 
     # Mojolicious
     
-    sub startup {
+    sub new {
         my $self = shift;
         
-        $self->plugin(plack_middleware => [
+        $self->plugin(PlackMiddleware => [
             'MyMiddleware1', 
             'MyMiddleware2', {arg1 => 'some_vale'},
             'MyMiddleware3', $condition_code_ref, 
             'MyMiddleware4', $condition_code_ref, {arg1 => 'some_value'}
         ]);
     }
-    
-    # Mojolicious::Lite
-    
-    plugin plack_middleware => [
-        'MyMiddleware1', 
-        'MyMiddleware2', {arg1 => 'some_vale'},
-        'MyMiddleware3', $condition_code_ref, 
-        'MyMiddleware4', $condition_code_ref, {arg1 => 'some_value'}
-    ];
     
     package Plack::Middleware::MyMiddleware1;
     use strict;
@@ -45,11 +36,11 @@ Mojolicious::Plugin::PlackMiddleware - Plack::Middleware inside Mojolicious
   
 =head1 DESCRIPTION
 
-Mojolicious::Plugin::PlackMiddleware allows you to enable Plack::Middleware
-inside Mojolicious using around_dispatch hook so that the portability of your
+Marquee::Plugin::PlackMiddleware allows you to enable Plack::Middleware
+inside Marquee using around_dispatch hook so that the portability of your
 app covers pre/post process too.
 
-It also aimed at those who used to Mojolicious bundle servers.
+It also aimed at those who used to Marquee bundle servers.
 Note that if you can run your application on a plack server, there is proper
 ways to use middlewares. See L<http://blog.kraih.com/mojolicious-and-plack>.
 
@@ -60,13 +51,13 @@ middlewares. Each middleware can be followed by callback function for
 conditional activation, and attributes for middleware.
 
     my $condition = sub {
-        my $c   = shift; # Mojolicious controller
+        my $c   = shift; # Marquee context
         my $env = shift; # PSGI env
         if (...) {
             return 1; # causes the middleware hooked
         }
     };
-    plugin plack_middleware => [
+    plugin PlackMiddleware => [
         Plack::Middleware::MyMiddleware, $condition, {arg1 => 'some_value'},
     ];
 
@@ -76,7 +67,7 @@ conditional activation, and attributes for middleware.
 
 $plugin->register;
 
-Register plugin hooks in L<Mojolicious> application.
+Register plugin hooks in L<Marquee> application.
 
 =head2 psgi_env_to_mojo_req
 
@@ -106,7 +97,7 @@ This is a utility method. This is for internal use.
 
 Plack::Middleware::Auth::Basic
 
-    $self->plugin(plack_middleware => [
+    $self->plugin(PlackMiddleware => [
         'Auth::Basic' => sub {shift->req->url =~ qr{^/?path1/}}, {
             authenticator => sub {
                 my ($user, $pass) = @_;
@@ -123,7 +114,7 @@ Plack::Middleware::Auth::Basic
 
 Plack::Middleware::ErrorDocument
 
-    $self->plugin('plack_middleware', [
+    $self->plugin('PlackMiddleware', [
         ErrorDocument => {
             500 => "$FindBin::Bin/errors/500.html"
         },
@@ -139,7 +130,7 @@ Plack::Middleware::ErrorDocument
 
 Plack::Middleware::JSONP
 
-    $self->plugin('plack_middleware', [
+    $self->plugin('PlackMiddleware', [
         JSONP => {callback_key => 'json.p'},
     ]);
 
